@@ -1,3 +1,4 @@
+I'm uploading this ti GitHub just for practice :) 
 /* ---- Registers - GPIO ---- */
 #define GPIO_D			0x40020C00
 #define GPIO_D_MODER		((volatile unsigned int   *)		(GPIO_D))
