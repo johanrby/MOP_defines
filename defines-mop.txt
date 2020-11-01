@@ -1,0 +1,144 @@
+/* ---- Registers - GPIO ---- */
+#define GPIO_D			0x40020C00
+#define GPIO_D_MODER		((volatile unsigned int   *)		(GPIO_D))
+#define GPIO_D_OTYPER		((volatile unsigned short *)		(GPIO_D+0x05))
+#define GPIO_D_PUPDR		((volatile unsigned short *) 		(GPIO_D+0x0E))
+#define GPIO_D_OSPEEDR		((volatile unsigned int   *)		(GPIO_D+0x08))
+#define GPIO_D_ODR		((volatile unsigned short *)		(GPIO_D+0x14))
+#define GPIO_D_ODR_LOW 		((volatile unsigned char  *)	 	(GPIO_D+0x14))	
+#define GPIO_D_ODR_HIGH 	((volatile unsigned char  *)		(GPIO_D+0x15))
+#define GPIO_D_IDR_LOW		((volatile unsigned char  *)		(GPIO_D+0x10))	
+#define GPIO_D_IDR_HIGH		((volatile unsigned char  *)		(GPIO_D+0x11))
+
+#define GPIO_E			0x40021000
+#define GPIO_E_MODER		((volatile unsigned int   *)		(GPIO_E))
+#define GPIO_E_OTYPER		((volatile unsigned short *)		(GPIO_E+0x05))
+#define GPIO_E_PUPDR		((volatile unsigned short *) 		(GPIO_E+0x0E))
+#define GPIO_E_OSPEEDR		((volatile unsigned int   *)		(GPIO_E+0x08))
+#define GPIO_E_ODR_LOW 		((volatile unsigned char  *)	 	(GPIO_E+0x14))	
+#define GPIO_E_ODR_HIGH 	((volatile unsigned char  *)		(GPIO_E+0x15))
+#define GPIO_E_IDR_LOW		((volatile unsigned char  *)		(GPIO_E+0x10))	
+#define GPIO_E_IDR_HIGH		((volatile unsigned char  *)		(GPIO_E+0x11))
+
+/* ----- SYSTICK ---- */
+#define SysTick			0xE000E010
+#define STK_CTRL		((volatile unsigned int *)		(SysTick))
+#define STK_LOAD		((volatile unsigned int *)		(SysTick+0x04))
+#define STK_VAL			((volatile unsigned int *)		(SysTick+0x08))
+
+
+/* ----- SYSCFG ---- */
+#define SYSCFG_EXTICR1 		((volatile unsigned int *)		0x40013808)
+#define SYSCFG_EXTICR2 		((volatile unsigned int *)		0x4001380C)
+#define SYSCFG_EXTICR3 		((volatile unsigned int *)		0x40013810)
+#define SYSCFG_EXTICR4 		((volatile unsigned int *)		0x40013814)
+
+/* ----- EXTI ---- */
+#define EXTI_IMR        	((volatile unsigned int *) 		0x40013C00)
+#define EXTI_EMR        	((volatile unsigned int *) 		0x40013C04)
+#define EXTI_RTSR       	((volatile unsigned int *) 		0x40013C08)
+#define EXTI_FTSR		((volatile unsigned int *) 		0x40013C0C)
+#define EXTI_PR         	((volatile unsigned int *) 		0x40013C14)
+#define EXTI0_IRQVEC 		((volatile unsigned int *)		0x2001C058)
+#define EXTI1_IRQVEC 		((volatile unsigned int *)		0x2001C05C)
+#define EXTI2_IRQVEC 		((volatile unsigned int *)		0x2001C060)
+#define EXTI3_IRQVEC 		((volatile unsigned int *)		0x2001C064)
+#define EXTI4_IRQVEC 		((volatile unsigned int *)		0x2001C068)
+#define EXTI9-5_IRQVEC 		((volatile unsigned int *)		0x2001C09C)
+#define EXTI15-10_IRQVEC 	((volatile unsigned int *)		0x2001C0E0)
+
+/* ----- NVIC ---- */
+#define NVIC 			0xE000E100
+#define NVIC_ISER0		((volatile unsigned int *) 		0xE000E100)
+#define NVIC_ISER1		((volatile unsigned int *) 		0xE000E104)
+#define NVIC_ISER2		((volatile unsigned int *) 		0xE000E108)
+#define NVIC_ISPR0      	((volatile unsigned int *) 		0xE000E100)
+
+/* ----- BIT POSITIONS ---- */
+#define EXTI0_IRQ_BPOS		(1<<0)		// (1 << EXTI-number)		
+#define EXTI1_IRQ_BPOS 		(1<<1)
+#define EXTI2_IRQ_BPOS 		(1<<2)
+#define EXTI3_IRQ_BPOS 		(1<<3)
+
+#define NVIC_EXTI0_IRQ_BPOS 	(1<<6)		// (1 << irq-number) 
+#define NVIC_EXTI1_IRQ_BPOS 	(1<<7)
+#define NVIC_EXTI2_IRQ_BPOS 	(1<<8)
+#define NVIC_EXTI3_IRQ_BPOS 	(1<<9)
+#define NVIC_EXTI4_IRQ_BPOS 	(1<<10) 
+	
+--- OBS ---: for irq-numbers bigger than 32, use the algorithm to decide which bit to use !!!!!!!!!!!!
+
+
+/* ----- IRQ VECTORS ---- */
+#define EXTI0_IRQVEC 		((volatile unsigned int *)		0x2001C058)
+#define EXTI1_IRQVEC 		((volatile unsigned int *)		0x2001C05C)
+#define EXTI2_IRQVEC 		((volatile unsigned int *)		0x2001C060)
+#define EXTI3_IRQVEC 		((volatile unsigned int *)		0x2001C064)
+#define EXTI4_IRQVEC 		((volatile unsigned int *)		0x2001C068)
+#define EXTI9-5_IRQVEC 		((volatile unsigned int *)		0x2001C09C)
+#define EXTI15-10_IRQVEC 	((volatile unsigned int *)		0x2001C0E0)
+				Kan då refereras: *EXTI(X)_IRQVEC = exti0_irq_handler;
+
+#define SYSTICK_IRQVEC 		((volatile unsigned int *)		0x2001C03C)
+				Kan då refereras: *SYSTICK_IRQVEC = systick_irq_handler;
+
+#define USART1_IRQVEC		((volatile unsigned int *)		0x2001C0D4)
+#define USART2_IRQVEC		((volatile unsigned int *)		0x2001C0D8)
+#define USART3_IRQVEC		((volatile unsigned int *)		0x2001C0DC)
+
+
+/* ----- USART ---- */
+
+Om USART:
+
+- Dubbelriktat kommunikation = sändare och mottager aktiverad (?)
+- Antal Stoppbitar bestäms med "cr2" 
+- Baudrate bestämst med "brr"
+
+
+#define USART1 			((USART *) 				0x40011000) 
+				// Kan använda datastrukturen och referera t.ex: USART1->brr
+ 
+
+// Bitar för USART_SR (Statusregister);
+#define BIT_TXE (1<<7) 		// Transmit data register empty, ettställa = TDR tomt(ledigt)
+#define BIT__TC (1<<6)
+#define BIT_RXNE (1<<5)		// Är 1 om nytt tecken finns i RDR(Receive data register)
+#define BIT_IDLE (1<<4)	
+#define BIT_ORE (1<<3)	
+#define BIT_NF (1<<2)	
+#define BIT_FE (1<<1)	
+#define BIT_PE (1<<0)
+
+// Bitar för USART_CR1 (Control register 1);
+#define BIT_UE (1<<13)		// Aktiverar/deaktiverar USART
+#define BIT_TXEIE (1<<7)	// USART avbrott genreras då TXE=1 i USART_SR	
+#define BIT_RXNEIE (1<<5)	// Receive inerrupt enable 
+#define BIT_TE (1<<3)		// Aktiverar/deaktiverar sändare
+#define BIT_RE (1<<2)		// Aktiverar/deaktiverar mottagare
+
+typedef struct tag_usart{
+	volatile unsigned short sr;
+	volatile unsigned short Unused0;
+	volatile unsigned short dr;
+	volatile unsigned short Unused1;
+	volatile unsigned short brr;
+	volatile unsigned short Unused2;
+	volatile unsigned short cr1;
+	volatile unsigned short Unused3;
+	volatile unsigned short cr2;
+	volatile unsigned short Unused4;
+	volatile unsigned short cr3;
+	volatile unsigned short Unused5;
+	volatile unsigned short gtpr;	
+}USART;
+ 
+ 
+ 
+ 
+
+
+
+
+
+
